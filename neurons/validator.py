@@ -27,9 +27,7 @@ import torch
 import argparse
 import traceback
 import bittensor as bt
-
-# import this repo
-import template
+import zkmlnet
 
 
 # Step 2: Set up the configuration parser
