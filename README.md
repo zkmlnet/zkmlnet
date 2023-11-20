@@ -1,3 +1,5 @@
+## ZkMlNet - The Zero Knowledge Machine Learning Bittensor Subnet
+
 This is repository contains the logic that defines Bittensor's ZKML subnet.  
 
 ### Install
