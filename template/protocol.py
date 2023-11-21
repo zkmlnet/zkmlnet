@@ -20,7 +20,6 @@
 import typing
 import bittensor as bt
 
-# TODO(developer): Rewrite with your protocol definition.
 
 # This is the protocol for the dummy miner and validator.
 # It is a simple request-response protocol where the validator sends a request
