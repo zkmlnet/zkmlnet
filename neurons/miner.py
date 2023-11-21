@@ -22,11 +22,13 @@
 
 # Step 1: Import necessary libraries and modules
 import os
+import sys
 import time
 import argparse
 import typing
 import traceback
 import bittensor as bt
+from bittensor.wallet import wallet
 
 # import this repo
 import template
@@ -59,16 +61,21 @@ def get_config():
     # Logging captures events for diagnosis or understanding miner's behavior.
     config.full_path = os.path.expanduser(
         "{}/{}/{}/netuid{}/{}".format(
-            config.logging.logging_dir,
-            config.wallet.name,
-            config.wallet.hotkey,
+            config.logging.logging_dir, # type: ignore
+            config.wallet.name, # type: ignore
+            config.wallet.hotkey, # type: ignore
             config.netuid,
             "miner",
         )
     )
     # Ensure the directory for logging exists, else create one.
-    if not os.path.exists(config.full_path):
-        os.makedirs(config.full_path, exist_ok=True)
+    try: 
+        if not os.path.exists(config.full_path):
+            os.makedirs(config.full_path, exist_ok=True)
+    except Exception as e:
+        bt.logging.error(f"failed to create logging directory with error: {str(e)}")
+        sys.exit(1)
+
     return config
 
 
@@ -223,4 +230,8 @@ def main(config):
 
 # This is the main function, which runs the miner.
 if __name__ == "__main__":
-    main(get_config())
+    try: 
+        main(get_config())
+    except Exception as e: 
+        bt.logging.error(f"failed to start miner with error: {str(e)}")
+        sys.exit(1)
