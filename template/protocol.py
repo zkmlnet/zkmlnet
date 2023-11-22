@@ -39,37 +39,24 @@ import bittensor as bt
 #   assert dummy_output == 2
 
 
-class Dummy(bt.Synapse):
+class ProvablePrompting(bt.Synapse):
     """
-    A simple dummy protocol representation which uses bt.Synapse as its base.
-    This protocol helps in handling dummy request and response communication between
-    the miner and the validator.
 
     Attributes:
-    - dummy_input: An integer value representing the input request sent by the validator.
-    - dummy_output: An optional integer value which, when filled, represents the response from the miner.
+    messages (List[str]):  A list of messages in the prompting scenario. 
+    completion (str): A string that captures the completion of the prompting scenario.
+    proof (str): A string that holds the proof of generation @TODO: wording
+
     """
 
-    # Required request input, filled by sending dendrite caller.
-    dummy_input: int
 
-    # Optional request output, filled by recieving axon.
-    dummy_output: typing.Optional[int] = None
-
-    def deserialize(self) -> int:
+    def deserialize(self) -> str:
         """
-        Deserialize the dummy output. This method retrieves the response from
-        the miner in the form of dummy_output, deserializes it and returns it
+        Deserialize the ProvablePrompting output. This method retrieves the response from
+        the miner in the form of the prompt completion, deserializes it and returns it
         as the output of the dendrite.query() call.
 
         Returns:
-        - int: The deserialized response, which in this case is the value of dummy_output.
-
-        Example:
-        Assuming a Dummy instance has a dummy_output value of 5:
-        >>> dummy_instance = Dummy(dummy_input=4)
-        >>> dummy_instance.dummy_output = 5
-        >>> dummy_instance.deserialize()
-        5
+            - string: The deserialized response, which in this case is the value of completion.
         """
-        return self.dummy_output
+        return self.completion

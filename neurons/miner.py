@@ -120,11 +120,7 @@ def main(config):
     my_subnet_uid = metagraph.hotkeys.index(wallet.hotkey.ss58_address)
     bt.logging.info(f"Running miner on uid: {my_subnet_uid}")
 
-    # Step 5: Set up miner functionalities
-    # The following functions control the miner's response to incoming requests.
-    # The blacklist function decides if a request should be ignored.
-    def blacklist_fn(synapse: template.protocol.Dummy) -> typing.Tuple[bool, str]:
-        # TODO(developer): Define how miners should blacklist requests. This Function
+    def blacklist_fn(synapse: template.protocol.ProvablePrompting) -> typing.Tuple[bool, str]:
         # Runs before the synapse data has been deserialized (i.e. before synapse.data is available).
         # The synapse is instead contructed via the headers of the request. It is important to blacklist
         # requests before they are deserialized to avoid wasting resources on requests that will be ignored.
@@ -145,9 +141,11 @@ def main(config):
         )
         return False, "Hotkey recognized!"
 
+
+
     # The priority function determines the order in which requests are handled.
     # More valuable or higher-priority requests are processed before others.
-    def priority_fn(synapse: template.protocol.Dummy) -> float:
+    def priority_fn(synapse: template.protocol.ProvablePrompting) -> float:
         # TODO(developer): Define how miners should prioritize requests.
         # Miners may recieve messages from multiple entities at once. This function
         # determines which request should be processed first. Higher values indicate
@@ -164,7 +162,7 @@ def main(config):
         return prirority
 
     # This is the core miner function, which decides the miner's response to a valid, high-priority request.
-    def dummy(synapse: template.protocol.Dummy) -> template.protocol.Dummy:
+    def dummy(synapse: template.protocol.ProvablePrompting) -> template.protocol.ProvablePrompting:
         # TODO(developer): Define how miners should process requests.
         # This function runs after the synapse has been deserialized (i.e. after synapse.data is available).
         # This function runs after the blacklist and priority functions have been called.
