@@ -22,12 +22,12 @@
 
 # Step 1: Import necessary libraries and modules
 import os
+import sys
 import time
 import torch
 import argparse
 import traceback
 import bittensor as bt
-import zkmlnet
 
 
 # Step 2: Set up the configuration parser
@@ -53,20 +53,23 @@ def get_config():
     # To print help message, run python3 template/validator.py --help
     config = bt.config(parser)
 
-    # Step 3: Set up logging directory
-    # Logging is crucial for monitoring and debugging purposes.
     config.full_path = os.path.expanduser(
         "{}/{}/{}/netuid{}/{}".format(
-            config.logging.logging_dir,
-            config.wallet.name,
-            config.wallet.hotkey,
+            config.logging.logging_dir, # type: ignore
+            config.wallet.name, # type: ignore
+            config.wallet.hotkey, # type: ignore
             config.netuid,
-            "validator",
+            "miner",
         )
     )
-    # Ensure the logging directory exists.
-    if not os.path.exists(config.full_path):
-        os.makedirs(config.full_path, exist_ok=True)
+    # Ensure the directory for logging exists, else create one.
+    try: 
+        if not os.path.exists(config.full_path):
+            os.makedirs(config.full_path, exist_ok=True)
+    except Exception as e:
+        bt.logging.error(f"failed to create logging directory with error: {str(e)}")
+        sys.exit(1)
+
 
     # Return the parsed config.
     return config
@@ -185,9 +188,10 @@ def main(config):
             exit()
 
 
-# The main function parses the configuration and runs the validator.
+
 if __name__ == "__main__":
-    # Parse the configuration.
-    config = get_config()
-    # Run the main function.
-    main(config)
+    try: 
+        main(get_config())
+    except Exception as e: 
+        bt.logging.error(f"failed to start miner with error: {str(e)}")
+        sys.exit(1)

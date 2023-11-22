@@ -81,6 +81,10 @@ def get_config():
 
 # Main takes the config and starts the miner.
 def main(config):
+    """ 
+    This function takes the configuration and starts the miner.
+    """
+
     # Activating Bittensor's logging with the set configurations.
     bt.logging(config=config, logging_dir=config.full_path)
     bt.logging.info(
